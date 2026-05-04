@@ -1,0 +1,63 @@
+<mxGraphModel adaptiveColors="auto">
+  <root>
+    <mxCell id="0"/>
+    <mxCell id="1" parent="0"/>
+    <mxCell id="2" value="Fraud Detection GraphRAG — System Architecture" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];strokeColor=none;fillColor=none;fontSize=16;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="150" y="4" width="620" height="28" as="geometry"/>
+    </mxCell>
+    <mxCell id="3" value="&lt;b&gt;Streamlit Web App&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#1565c0&quot;&gt;streamlit_app.py&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px;&quot;&gt;Query Input · Live Investigation Feed · Risk Score · Flagged Players&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#1565c0;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="315" y="38" width="260" height="68" as="geometry"/>
+    </mxCell>
+    <mxCell id="4" value="&lt;b&gt;LangGraph Multi-Agent State Machine (main.py)&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e5f5;strokeColor=#9673a6;strokeWidth=2;dashed=1;dashPattern=8 4;fontSize=11;fontStyle=1;verticalAlign=top;spacingTop=6;" vertex="1" parent="1">
+      <mxGeometry x="25" y="148" width="820" height="385" as="geometry"/>
+    </mxCell>
+    <mxCell id="5" value="&lt;b&gt;Supervisor Agent&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px;&quot;&gt;claude-sonnet-4-6 · with_structured_output()&lt;br&gt;SupervisorDecision: { reasoning, next_agent }&lt;br&gt;Routes to: graph_agent | vector_agent | FINISH&lt;br&gt;LangGraph entry point · conditional_edges router&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="245" y="195" width="310" height="90" as="geometry"/>
+    </mxCell>
+    <mxCell id="6" value="&lt;b&gt;Graph Agent&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px;&quot;&gt;Neo4j Cypher Queries&lt;br&gt;Detects shared IPs,&lt;br&gt;Addresses &amp;amp; Terminals&lt;br&gt;(collusion patterns)&lt;br&gt;risk += 25 × links&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="50" y="330" width="165" height="105" as="geometry"/>
+    </mxCell>
+    <mxCell id="7" value="&lt;b&gt;AgentState&lt;/b&gt; (Shared)&lt;br&gt;&lt;font style=&quot;font-size:9px;&quot;&gt;query: str&lt;br&gt;investigation_log: List[str] +=&lt;br&gt;suspicious_players: List[str] +=&lt;br&gt;risk_score: int +=&lt;br&gt;next_step: str (routing)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="265" y="330" width="270" height="105" as="geometry"/>
+    </mxCell>
+    <mxCell id="8" value="&lt;b&gt;Vector Agent&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px;&quot;&gt;Behavioral Analysis&lt;br&gt;Analyzes flagged players&apos;&lt;br&gt;betting frequency &amp;amp; timing&lt;br&gt;(anomaly detection)&lt;br&gt;risk += 15 × players&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#006EAF;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="585" y="330" width="165" height="105" as="geometry"/>
+    </mxCell>
+    <mxCell id="9" value="&lt;b&gt;Anthropic Claude API&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#bf360c&quot; style=&quot;font-size:9px;&quot;&gt;External Service&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px;&quot;&gt;claude-sonnet-4-6&lt;br&gt;temperature=0 · max_tokens=1024&lt;br&gt;ChatAnthropic (LangChain)&lt;br&gt;ANTHROPIC_API_KEY (env)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="885" y="170" width="185" height="125" as="geometry"/>
+    </mxCell>
+    <mxCell id="10" value="&lt;b&gt;Neo4j Graph Database&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px;&quot;&gt;NEO4J_URI · credentials (env)&lt;br&gt;Player →[LOGGED_IN_FROM]→ IPAddress&lt;br&gt;Player →[LIVES_AT]→ Address&lt;br&gt;Player →[PLACED_BET]→ Terminal&lt;/font&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontSize=11;verticalAlign=top;spacingTop=6;" vertex="1" parent="1">
+      <mxGeometry x="50" y="587" width="240" height="120" as="geometry"/>
+    </mxCell>
+    <mxCell id="11" value="&lt;b&gt;populate_neo4j.py&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size:9px;&quot;&gt;Seeds test data (run once)&lt;br&gt;John Doe (PLR-001)&lt;br&gt;Jane Smith (PLR-002)&lt;br&gt;Shared IP · Address · Terminal&lt;br&gt;neo4j Python driver&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+      <mxGeometry x="348" y="592" width="200" height="105" as="geometry"/>
+    </mxCell>
+    <mxCell id="12" value="query" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.4;exitY=1;entryX=0.4;entryY=0;strokeColor=#546e7a;fontSize=9;" edge="1" source="3" target="5" parent="1">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="13" value="stream results" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.65;exitY=0;entryX=0.65;entryY=1;strokeColor=#1565c0;dashed=1;fontSize=9;" edge="1" source="5" target="3" parent="1">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="14" value="route" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.1;exitY=1;entryX=0.5;entryY=0;strokeColor=#9673a6;fontSize=9;" edge="1" source="5" target="6" parent="1">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="15" value="report" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.8;exitY=0;entryX=0.05;entryY=1;strokeColor=#82b366;fontSize=9;" edge="1" source="6" target="5" parent="1">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="16" value="route" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.9;exitY=1;entryX=0.5;entryY=0;strokeColor=#9673a6;fontSize=9;" edge="1" source="5" target="8" parent="1">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="17" value="report" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.2;exitY=0;entryX=0.95;entryY=1;strokeColor=#006EAF;fontSize=9;" edge="1" source="8" target="5" parent="1">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="18" value="LLM invoke" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#d79b00;fontSize=9;" edge="1" source="5" target="9" parent="1">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="19" value="Cypher queries" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeColor=#82b366;fontSize=9;" edge="1" source="6" target="10" parent="1">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+    <mxCell id="20" value="seeds data" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;strokeColor=#666666;fontSize=9;" edge="1" source="11" target="10" parent="1">
+      <mxGeometry relative="1" as="geometry"/>
+    </mxCell>
+  </root>
+</mxGraphModel>

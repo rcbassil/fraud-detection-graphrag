@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="720"
+     viewBox="0 0 980 720" font-family="Arial, Helvetica, sans-serif">
+
+  <defs>
+    <marker id="arr"       markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#546E7A"/></marker>
+    <marker id="arrBlue"   markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#1565C0"/></marker>
+    <marker id="arrGreen"  markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#2E7D32"/></marker>
+    <marker id="arrPurple" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#6A1B9A"/></marker>
+    <marker id="arrRed"    markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#BF360C"/></marker>
+    <marker id="arrTeal"   markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#00695C"/></marker>
+
+    <filter id="shadow" x="-5%" y="-5%" width="115%" height="120%">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-color="#00000022"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="980" height="720" fill="#F4F6F8" rx="8"/>
+
+  <!-- ═══════════════════════════════════════
+       TITLE
+       ═══════════════════════════════════════ -->
+  <text x="490" y="34" text-anchor="middle" font-size="19" font-weight="bold" fill="#1A1A2E">
+    Fraud Detection GraphRAG — System Architecture
+  </text>
+
+  <!-- ═══════════════════════════════════════
+       STREAMLIT WEB APP
+       ═══════════════════════════════════════ -->
+  <rect x="235" y="50" width="440" height="74" rx="10"
+        fill="#E3F2FD" stroke="#1565C0" stroke-width="2" filter="url(#shadow)"/>
+  <text x="455" y="74"  text-anchor="middle" font-size="13" font-weight="bold" fill="#0D47A1">Streamlit Web App</text>
+  <text x="455" y="91"  text-anchor="middle" font-size="10" fill="#1565C0">streamlit_app.py</text>
+  <text x="455" y="109" text-anchor="middle" font-size="9.5" fill="#1565C0">
+    Query Input  ·  Live Investigation Feed  ·  Risk Score  ·  Flagged Players
+  </text>
+
+  <!-- query ↓ -->
+  <line x1="400" y1="124" x2="338" y2="196"
+        stroke="#546E7A" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="348" y="164" font-size="9" fill="#546E7A">query</text>
+
+  <!-- stream ↑ -->
+  <line x1="455" y1="196" x2="498" y2="124"
+        stroke="#1565C0" stroke-width="1.5" marker-end="url(#arrBlue)"/>
+  <text x="488" y="163" font-size="9" fill="#1565C0">stream</text>
+
+  <!-- ═══════════════════════════════════════
+       LANGGRAPH OUTER BOX
+       ═══════════════════════════════════════ -->
+  <rect x="28" y="162" width="702" height="326" rx="12"
+        fill="#F3E5F5" fill-opacity="0.55" stroke="#7B1FA2" stroke-width="2" stroke-dasharray="8,4"/>
+  <text x="379" y="185" text-anchor="middle" font-size="11.5" font-weight="bold" fill="#4A148C">
+    LangGraph Multi-Agent State Machine  (main.py)
+  </text>
+
+  <!-- ─── SUPERVISOR ─── -->
+  <rect x="196" y="197" width="346" height="108" rx="9"
+        fill="#CE93D8" stroke="#7B1FA2" stroke-width="2" filter="url(#shadow)"/>
+  <text x="369" y="221" text-anchor="middle" font-size="13" font-weight="bold" fill="#1A1A2E">Supervisor Agent</text>
+  <text x="369" y="240" text-anchor="middle" font-size="9.5" fill="#333">
+    ChatAnthropic · claude-sonnet-4-6 · with_structured_output()
+  </text>
+  <text x="369" y="257" text-anchor="middle" font-size="9.5" fill="#333">
+    SupervisorDecision: { reasoning, next_agent }
+  </text>
+  <text x="369" y="274" text-anchor="middle" font-size="9" fill="#555">Routes to:  graph_agent  |  vector_agent  |  FINISH</text>
+  <text x="369" y="291" text-anchor="middle" font-size="9" fill="#555">LangGraph entry point  ·  conditional_edges router</text>
+  <text x="369" y="307" text-anchor="middle" font-size="8.5" fill="#777">risk_score = 25 × links + 15 × players</text>
+
+  <!-- Supervisor → Graph Agent (route ↙) -->
+  <path d="M 218 305 L 165 340"
+        stroke="#6A1B9A" stroke-width="1.5" fill="none" marker-end="url(#arrPurple)"/>
+  <text x="166" y="327" font-size="8.5" fill="#6A1B9A">route</text>
+
+  <!-- Graph Agent → Supervisor (report ↗) -->
+  <path d="M 190 340 L 255 305"
+        stroke="#2E7D32" stroke-width="1.5" fill="none" marker-end="url(#arrGreen)"/>
+  <text x="224" y="316" font-size="8.5" fill="#2E7D32">report</text>
+
+  <!-- Supervisor → Vector Agent (route ↘) -->
+  <path d="M 519 305 L 575 340"
+        stroke="#6A1B9A" stroke-width="1.5" fill="none" marker-end="url(#arrPurple)"/>
+  <text x="527" y="328" font-size="8.5" fill="#6A1B9A">route</text>
+
+  <!-- Vector Agent → Supervisor (report ↖) -->
+  <path d="M 556 340 L 490 305"
+        stroke="#00695C" stroke-width="1.5" fill="none" marker-end="url(#arrTeal)"/>
+  <text x="485" y="316" font-size="8.5" fill="#00695C">report</text>
+
+  <!-- ─── GRAPH AGENT ─── -->
+  <rect x="44" y="347" width="218" height="110" rx="9"
+        fill="#C8E6C9" stroke="#388E3C" stroke-width="2" filter="url(#shadow)"/>
+  <text x="153" y="371" text-anchor="middle" font-size="12" font-weight="bold" fill="#1A1A2E">Graph Agent</text>
+  <text x="153" y="389" text-anchor="middle" font-size="9.5" fill="#1B5E20">Neo4j Cypher Queries</text>
+  <text x="153" y="407" text-anchor="middle" font-size="9" fill="#333">Detects shared identifiers:</text>
+  <text x="153" y="422" text-anchor="middle" font-size="9" fill="#333">IPs · Addresses · Terminals</text>
+  <text x="153" y="437" text-anchor="middle" font-size="8.5" fill="#555">(collusion pattern detection)</text>
+  <text x="153" y="452" text-anchor="middle" font-size="8.5" fill="#777">langchain_neo4j · Neo4jGraph</text>
+
+  <!-- ─── AGENT STATE ─── -->
+  <rect x="276" y="350" width="190" height="96" rx="9"
+        fill="#FFFDE7" stroke="#F9A825" stroke-width="2" filter="url(#shadow)"/>
+  <text x="371" y="372" text-anchor="middle" font-size="11" font-weight="bold" fill="#1A1A2E">AgentState</text>
+  <text x="371" y="388" text-anchor="middle" font-size="8.5" fill="#555">query: str</text>
+  <text x="371" y="402" text-anchor="middle" font-size="8.5" fill="#555">investigation_log: List[str]  (append)</text>
+  <text x="371" y="416" text-anchor="middle" font-size="8.5" fill="#555">suspicious_players: List[str]  (append)</text>
+  <text x="371" y="430" text-anchor="middle" font-size="8.5" fill="#555">risk_score: int  (add)</text>
+  <text x="371" y="444" text-anchor="middle" font-size="8" fill="#777">next_step: str  (routing key)</text>
+
+  <!-- ─── VECTOR AGENT ─── -->
+  <rect x="478" y="347" width="218" height="110" rx="9"
+        fill="#B2EBF2" stroke="#00838F" stroke-width="2" filter="url(#shadow)"/>
+  <text x="587" y="371" text-anchor="middle" font-size="12" font-weight="bold" fill="#1A1A2E">Vector Agent</text>
+  <text x="587" y="389" text-anchor="middle" font-size="9.5" fill="#00695C">Behavioral Analysis</text>
+  <text x="587" y="407" text-anchor="middle" font-size="9" fill="#333">Analyzes flagged players'</text>
+  <text x="587" y="422" text-anchor="middle" font-size="9" fill="#333">betting frequency &amp; timing</text>
+  <text x="587" y="437" text-anchor="middle" font-size="8.5" fill="#555">(300% frequency increase)</text>
+  <text x="587" y="452" text-anchor="middle" font-size="8.5" fill="#777">Reads suspicious_players state</text>
+
+  <!-- ═══════════════════════════════════════
+       ANTHROPIC API (right sidebar)
+       ═══════════════════════════════════════ -->
+  <rect x="752" y="162" width="213" height="175" rx="10"
+        fill="#FBE9E7" stroke="#BF360C" stroke-width="2" filter="url(#shadow)"/>
+  <text x="858" y="187" text-anchor="middle" font-size="12" font-weight="bold" fill="#BF360C">Anthropic Claude API</text>
+  <text x="858" y="204" text-anchor="middle" font-size="9.5" fill="#E64A19">External Service</text>
+
+  <rect x="784" y="213" width="149" height="29" rx="6"
+        fill="#FFCCBC" stroke="#E64A19" stroke-width="1.2"/>
+  <text x="858" y="232" text-anchor="middle" font-size="10" font-weight="bold" fill="#BF360C">claude-sonnet-4-6</text>
+
+  <text x="858" y="258" text-anchor="middle" font-size="9" fill="#555">temperature=0  ·  max_tokens=1024</text>
+  <text x="858" y="274" text-anchor="middle" font-size="9" fill="#555">ChatAnthropic (LangChain)</text>
+  <text x="858" y="290" text-anchor="middle" font-size="9" fill="#555">with_structured_output()</text>
+  <text x="858" y="306" text-anchor="middle" font-size="9" fill="#555">ANTHROPIC_API_KEY (env)</text>
+  <text x="858" y="322" text-anchor="middle" font-size="8.5" fill="#999">Bedrock / Vertex alternatives</text>
+
+  <!-- Supervisor → Anthropic -->
+  <path d="M 542 248 Q 648 248 752 248"
+        stroke="#BF360C" stroke-width="1.5" fill="none" marker-end="url(#arrRed)"/>
+  <text x="634" y="241" font-size="9" fill="#BF360C">LLM invoke</text>
+
+  <!-- ═══════════════════════════════════════
+       GRAPH AGENT → NEO4J (cross-row arrow)
+       ═══════════════════════════════════════ -->
+  <line x1="153" y1="457" x2="153" y2="508"
+        stroke="#388E3C" stroke-width="1.5" marker-end="url(#arrGreen)"/>
+  <text x="159" y="486" font-size="9" fill="#388E3C">Cypher queries</text>
+
+  <!-- ═══════════════════════════════════════
+       NEO4J GRAPH DATABASE
+       ═══════════════════════════════════════ -->
+  <rect x="28" y="508" width="462" height="202" rx="10"
+        fill="#E8F5E9" stroke="#2E7D32" stroke-width="2" filter="url(#shadow)"/>
+  <text x="259" y="532" text-anchor="middle" font-size="13" font-weight="bold" fill="#1B5E20">Neo4j Graph Database</text>
+  <text x="259" y="550" text-anchor="middle" font-size="9.5" fill="#388E3C">
+    NEO4J_URI · NEO4J_USERNAME · NEO4J_PASSWORD  (env)
+  </text>
+
+  <!-- Player 1 -->
+  <circle cx="90"  cy="618" r="23" fill="#A5D6A7" stroke="#388E3C" stroke-width="1.5"/>
+  <text x="90"  y="615" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#1B5E20">Player</text>
+  <text x="90"  y="627" text-anchor="middle" font-size="7.5" fill="#2E7D32">PLR-001</text>
+
+  <!-- Player 2 -->
+  <circle cx="90"  cy="680" r="23" fill="#A5D6A7" stroke="#388E3C" stroke-width="1.5"/>
+  <text x="90"  y="677" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#1B5E20">Player</text>
+  <text x="90"  y="689" text-anchor="middle" font-size="7.5" fill="#2E7D32">PLR-002</text>
+
+  <!-- IPAddress -->
+  <circle cx="258" cy="587" r="22" fill="#80DEEA" stroke="#00838F" stroke-width="1.5"/>
+  <text x="258" y="584" text-anchor="middle" font-size="7.5" fill="#006064">IPAddress</text>
+  <text x="258" y="596" text-anchor="middle" font-size="7" fill="#006064">192.168.1.50</text>
+
+  <!-- Address -->
+  <circle cx="258" cy="653" r="22" fill="#80DEEA" stroke="#00838F" stroke-width="1.5"/>
+  <text x="258" y="650" text-anchor="middle" font-size="7.5" fill="#006064">Address</text>
+  <text x="258" y="662" text-anchor="middle" font-size="7" fill="#006064">123 Multi-Agent</text>
+
+  <!-- Terminal -->
+  <circle cx="405" cy="635" r="24" fill="#FFE082" stroke="#FF8F00" stroke-width="1.5"/>
+  <text x="405" y="632" text-anchor="middle" font-size="8" font-weight="bold" fill="#E65100">Terminal</text>
+  <text x="405" y="644" text-anchor="middle" font-size="7.5" fill="#E65100">TM-99</text>
+
+  <!-- P1 → IPAddress -->
+  <line x1="113" y1="610" x2="236" y2="591"
+        stroke="#388E3C" stroke-width="1.3" marker-end="url(#arrGreen)"/>
+  <text x="164" y="594" font-size="7" fill="#2E7D32">LOGGED_IN_FROM</text>
+
+  <!-- P2 → IPAddress -->
+  <line x1="113" y1="672" x2="237" y2="606"
+        stroke="#388E3C" stroke-width="1.3" marker-end="url(#arrGreen)"/>
+
+  <!-- P1 → Address -->
+  <line x1="113" y1="626" x2="237" y2="645"
+        stroke="#388E3C" stroke-width="1.3" marker-end="url(#arrGreen)"/>
+  <text x="154" y="645" font-size="7" fill="#2E7D32">LIVES_AT</text>
+
+  <!-- P2 → Address -->
+  <line x1="113" y1="677" x2="237" y2="662"
+        stroke="#388E3C" stroke-width="1.3" marker-end="url(#arrGreen)"/>
+
+  <!-- P1 → Terminal -->
+  <line x1="113" y1="616" x2="381" y2="631"
+        stroke="#388E3C" stroke-width="1.3" marker-end="url(#arrGreen)"/>
+  <text x="240" y="618" font-size="7" fill="#2E7D32">PLACED_BET</text>
+
+  <!-- P2 → Terminal -->
+  <line x1="113" y1="682" x2="382" y2="649"
+        stroke="#388E3C" stroke-width="1.3" marker-end="url(#arrGreen)"/>
+
+  <!-- ═══════════════════════════════════════
+       DATA SEEDING SCRIPT
+       ═══════════════════════════════════════ -->
+  <rect x="510" y="508" width="234" height="138" rx="10"
+        fill="#ECEFF1" stroke="#546E7A" stroke-width="2" filter="url(#shadow)"/>
+  <text x="627" y="532" text-anchor="middle" font-size="12" font-weight="bold" fill="#263238">Data Seeding</text>
+  <text x="627" y="550" text-anchor="middle" font-size="10" fill="#546E7A">populate_neo4j.py</text>
+  <text x="627" y="568" text-anchor="middle" font-size="9" fill="#555">Creates test players:</text>
+  <text x="627" y="583" text-anchor="middle" font-size="9" fill="#555">John Doe (PLR-001)  ·  Jane Smith (PLR-002)</text>
+  <text x="627" y="598" text-anchor="middle" font-size="9" fill="#555">Shared IP · Shared Address · Shared Terminal</text>
+  <text x="627" y="613" text-anchor="middle" font-size="9" fill="#555">(simulates collusion pattern)</text>
+  <text x="627" y="630" text-anchor="middle" font-size="8.5" fill="#78909C">neo4j Python driver · GraphDatabase</text>
+  <text x="627" y="641" text-anchor="middle" font-size="8" fill="#90A4AE">run once to seed test data</text>
+
+  <!-- populate → Neo4j -->
+  <path d="M 546 565 Q 514 565 490 590"
+        stroke="#546E7A" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+  <text x="492" y="558" font-size="8.5" fill="#546E7A">seeds data</text>
+
+  <!-- ═══════════════════════════════════════
+       LEGEND
+       ═══════════════════════════════════════ -->
+  <rect x="752" y="364" width="213" height="170" rx="8"
+        fill="#FFFFFF" stroke="#CFD8DC" stroke-width="1.5"/>
+  <text x="858" y="384" text-anchor="middle" font-size="10" font-weight="bold" fill="#37474F">Legend</text>
+
+  <rect x="768" y="394" width="16" height="10" rx="3" fill="#E3F2FD" stroke="#1565C0" stroke-width="1.2"/>
+  <text x="792" y="403" font-size="9" fill="#333">Streamlit UI</text>
+
+  <rect x="768" y="412" width="16" height="10" rx="3" fill="#F3E5F5" stroke="#7B1FA2" stroke-width="1.2" stroke-dasharray="4,2"/>
+  <text x="792" y="421" font-size="9" fill="#333">LangGraph State Machine</text>
+
+  <rect x="768" y="430" width="16" height="10" rx="3" fill="#CE93D8" stroke="#7B1FA2" stroke-width="1.2"/>
+  <text x="792" y="439" font-size="9" fill="#333">Supervisor (LLM orchestrator)</text>
+
+  <rect x="768" y="448" width="16" height="10" rx="3" fill="#C8E6C9" stroke="#388E3C" stroke-width="1.2"/>
+  <text x="792" y="457" font-size="9" fill="#333">Graph Agent (structural)</text>
+
+  <rect x="768" y="466" width="16" height="10" rx="3" fill="#B2EBF2" stroke="#00838F" stroke-width="1.2"/>
+  <text x="792" y="475" font-size="9" fill="#333">Vector Agent (behavioral)</text>
+
+  <rect x="768" y="484" width="16" height="10" rx="3" fill="#FFFDE7" stroke="#F9A825" stroke-width="1.2"/>
+  <text x="792" y="493" font-size="9" fill="#333">AgentState (shared)</text>
+
+  <rect x="768" y="502" width="16" height="10" rx="3" fill="#FBE9E7" stroke="#BF360C" stroke-width="1.2"/>
+  <text x="792" y="511" font-size="9" fill="#333">Anthropic Claude API</text>
+
+  <rect x="768" y="520" width="16" height="10" rx="3" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1.2"/>
+  <text x="792" y="529" font-size="9" fill="#333">Neo4j Graph Database</text>
+
+</svg>
