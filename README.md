@@ -24,6 +24,16 @@ START → supervisor → graph_agent → supervisor → vector_agent → supervi
 (Player)-[:PLACED_BET]->(Terminal)
 ```
 
+## Web Interface
+
+A Streamlit UI is included for interactive investigations:
+
+```bash
+uv run streamlit run streamlit_app.py
+```
+
+Open http://localhost:8501, enter your query, and click **Run Investigation**. The interface streams supervisor decisions and agent findings live, then summarises flagged players and the final risk score.
+
 ## Setup
 
 **Prerequisites:** Python 3.12+, a running Neo4j instance, an Anthropic API key.

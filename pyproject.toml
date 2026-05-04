@@ -12,4 +12,5 @@ dependencies = [
     "neo4j",
     "pydantic>=2.13.3",
     "python-dotenv",
+    "streamlit>=1.45.0",
 ]
