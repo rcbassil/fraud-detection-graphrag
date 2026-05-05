@@ -7,8 +7,8 @@ A multi-agent fraud detection system that combines graph-based structural analys
 The system runs three agents in a loop coordinated by a supervisor:
 
 1. **Supervisor** — an LLM (Claude Sonnet 4.6) that reads the investigation log and decides which agent to call next, or when to finish.
-2. **Graph Agent** — queries Neo4j for players sharing IP addresses, home addresses, or betting terminals — structural patterns indicative of collusion.
-3. **Vector Agent** — analyzes betting behavior anomalies (frequency spikes, coordinated timing) for the players flagged by the graph agent.
+2. **Graph Agent** — queries Neo4j for players sharing IP addresses, home addresses, or betting terminals — structural patterns indicative of collusion. Results are interpreted by the LLM in the context of the user's query.
+3. **Vector Agent** — fetches actual betting records (amounts, terminals, historical averages) for flagged players from Neo4j, then uses the LLM to surface anomalies relevant to the user's query.
 
 Each agent appends to a shared `investigation_log` and accumulates a `risk_score`. The supervisor routes between agents until it has enough evidence to `FINISH`.
 
@@ -83,7 +83,13 @@ Open http://localhost:8501, enter your query, and click **Run Investigation**. T
     - John Doe <-> Jane Smith (shared IPAddress)
     - John Doe <-> Jane Smith (shared Address)
     - John Doe <-> Jane Smith (shared Terminal)
-- Vector Agent: Analyzed 2 flagged player(s): John Doe, Jane Smith. Behavioral baseline shows a 300% increase in betting frequency and coordinated bet timing.
+  Analysis: John Doe and Jane Smith share an IP address, home address, and betting terminal,
+  strongly suggesting coordinated activity or a single actor operating multiple accounts.
+- Vector Agent: Betting data for 2 player(s):
+    - Jane Smith: bet $4800 at Casino Floor A (historical avg: $45)
+    - John Doe: bet $5000 at Casino Floor A (historical avg: $50)
+  Analysis: Both players placed bets roughly 100x their historical averages at the same terminal,
+  a highly anomalous pattern consistent with coordinated collusion or match-fixing.
 
 FINAL RISK SCORE: 105
 ```

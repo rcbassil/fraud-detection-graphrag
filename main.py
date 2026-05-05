@@ -67,7 +67,14 @@ def graph_agent(state: AgentState):
         flagged.add(row["player2"])
         details.append(f"{row['player1']} <-> {row['player2']} (shared {row['shared_via']})")
 
-    log = f"Graph Agent: Found {len(details)} suspicious link(s):\n" + "\n".join(f"  - {d}" for d in details)
+    raw_findings = "\n".join(f"  - {d}" for d in details)
+    interpretation = llm.invoke(
+        f"User question: {state['query']}\n\n"
+        f"Graph analysis found these structural connections between players:\n{raw_findings}\n\n"
+        "In 2-3 sentences, explain what these connections suggest in the context of the user's question."
+    )
+
+    log = f"Graph Agent: Found {len(details)} suspicious link(s):\n{raw_findings}\nAnalysis: {interpretation.content}"
     return {
         "investigation_log": [log],
         "suspicious_players": list(flagged),
@@ -80,10 +87,31 @@ def vector_agent(state: AgentState):
     if not players:
         return {"investigation_log": ["Vector Agent: No flagged players to analyze."], "risk_score": 0}
 
-    log = (
-        f"Vector Agent: Analyzed {len(players)} flagged player(s): {', '.join(players)}. "
-        "Behavioral baseline shows a 300% increase in betting frequency and coordinated bet timing."
+    graph = Neo4jGraph(url=os.getenv("NEO4J_URI"), username=os.getenv("NEO4J_USERNAME"), password=os.getenv("NEO4J_PASSWORD"), refresh_schema=False)
+    betting_data = graph.query("""
+        MATCH (p:Player)-[b:PLACED_BET]->(t:Terminal)
+        WHERE p.name IN $players
+        RETURN p.name AS player, p.historical_avg AS historical_avg,
+               b.amount AS bet_amount, t.location AS terminal
+        ORDER BY p.name
+    """, params={"players": players})
+
+    if not betting_data:
+        return {"investigation_log": [f"Vector Agent: No betting records found for {', '.join(players)}."], "risk_score": 0}
+
+    bet_summary = "\n".join(
+        f"  - {row['player']}: bet ${row['bet_amount']} at {row['terminal']} (historical avg: ${row['historical_avg']})"
+        for row in betting_data
     )
+
+    analysis = llm.invoke(
+        f"User question: {state['query']}\n\n"
+        f"Betting behavior data for flagged players:\n{bet_summary}\n\n"
+        "Analyze these betting patterns for anomalies relevant to the user's question. "
+        "Flag specific deviations from historical averages. Be concise (2-3 sentences)."
+    )
+
+    log = f"Vector Agent: Betting data for {len(players)} player(s):\n{bet_summary}\nAnalysis: {analysis.content}"
     return {"investigation_log": [log], "risk_score": 15 * len(players)}
 
 def supervisor(state: AgentState):
